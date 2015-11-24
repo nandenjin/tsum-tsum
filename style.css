@@ -35,5 +35,6 @@ body{
 #centerPiece{
   top:43.5%;
   left:43.5%;
-  background:url('./src/point_black.png');
+  background:#FFF url('./src/point_black.png') center no-repeat;
+  background-size:75%;
 }
