@@ -20,4 +20,20 @@ body{
 	margin:auto;
 }
 
-/*  */
+/* ピース */
+.piece{
+  display:inline-block;
+  position:absolute;
+  width:15%;
+  height:15%;
+  
+  background-color:#FFF;
+  box-shadow:1px 1px 2px 1px rgba(0,0,0,0.2);
+  border-radius:50%;
+}
+
+#centerPiece{
+  top:43.5%;
+  left:43.5%;
+  background:url('./src/point_black.png');
+}
