@@ -1,20 +1,497 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>百粁つむつむ</title>
-		<meta name="viewport" content="width=device-width">
-		<link rel="stylesheet" href="style.css">
-	</head>
-	<body>
-		<div id="container">
-			<span class="piece" id="centerPiece"></span>
-		</div>
-		<script>
-			function elm(id){
-				return document.getElementById(id);
+    <head>
+        <meta name="viewport" content="width=400,user-scalable=no"> 
+        <meta charset="utf-8">
+        <title>百粁つむつむ - 文字を並べる百粁用語パズル</title>
+        <style>
+        	@font-face{
+        		src:url("Hannari.otf");
+        		font-family:"はんなり"
+        	}
+            body{
+                background-color:#FFF;
+                font-family:"はんなり";
+            }
+            #wrapper{
+                position:absolute;
+                top:calc((100% - 95vmin)/2);
+                left:calc((100% - 95vmin)/2);
+                width:95vmin;
+                height:95vmin;
+                background-color:#FFF;
+            }
+            #container{
+                position:absolute;
+                top:8%;
+                left:8%;
+                width:84%;
+                height:84%;
+                background-color:#FFF;
+                overflow:hidden;
+            }
+            #cover{
+            		display:none;
+            		z-index:2;
+            		width:100%;
+            		height:100%;
+            		position:absolute;
+            		top:0%;
+            		left:0%;
+            		color:#FFF;
+            		opacity:0;
+            		transition:opacity 0.4s ease 0.1s;
+            }
+            #cover_filling{
+            		width:100%;
+            		height:100%;
+            		position:absolute;
+            		top:0%;
+            		left:0%;
+            		background-color:#2196f3;
+            		opacity:0.75;
+            		color:#FFF;
+            }
+            #cover_kana{
+            		position:absolute;
+            		top:30%;
+            		left:0%;
+            		width:100%;
+            		text-align:center;
+            		font-size:10vmin;
+            }
+            #cover_title{
+            		position:absolute;
+            		top:50%;
+            		left:0%;
+            		width:100%;
+            		text-align:center;
+            		font-size:5vmin;
+            }
+            #cover_score{
+            		position:absolute;
+            		top:70%;
+            		left:0%;
+            		width:100%;
+            		text-align:center;
+            		font-size:7vmin;
+            		font-weight:bold;
+            }
+            .block{
+            		display:block;
+                position:absolute;
+                bottom:0%;
+                width:19.95vmin;
+                height:19.95vmin;
+                color:#DDD;
+                text-shadow:-1px -1px 3px rgba(0,0,0,0.15);
+                text-align:center;
+                line-height:19.95vmin;
+                font:normal 12vmin "はんなり",serif;
+            		transition:bottom 0.3s ease-out 0s,color 0.3s ease-out 0s,transform 1s ease 0s,-webkit-transform 1s ease 0s,opacity 1s ease 0s;
+            }
+            .block div{
+            		position:absolute;
+            		top:0;
+            		left:0;
+            		right:0;
+            		bottom:0;
+            		margin:auto;
+            		width:100%;
+            		height:100%;
+            }
+            .block div:nth-child(1){
+            		border-radius:50%;
+            		-webkit-transform:scale(0);
+            		transform:scale(0);
+            		transition:transform 0.3s ease-out 0s,-webkit-transform 0.3s ease-out 0s;
+            }
+            .block div:nth-child(2){
+        	    	line-height:19.95vmin;
+            }
+            #foot{
+            		position:absolute;
+            		bottom:5vmin;
+            		right:5vmin;
+            		height:30px;
+            		text-align:right;
+            		width:100%;
+            }
+            #foot #lvd{
+            		position:absolute;
+            		right:0%;
+            		border-radius:50%;
+            		width:8vmin;
+            		height:8vmin;
+            		box-shadow:0.3vmin 0.3vmin 0.3vmin 0.1vmin  rgba(0,0,0,0.5) inset;
+            }
+            
+            @media (min-width:450px){
+            		.block{
+            			cursor:pointer;
+            		}
+            }
+        </style>
+        <script>
+var ects=[],ectsch=[];
+var ectsDefault=["いしぶたい","いそのかみ","ならこうえん","おおみわ","てんり","やまのべ","あすか"];
+var ectschDefault=["石舞台古墳","石上外苑公園","奈良公園","大神神社","天理大学","山の辺の道","飛鳥歴史公園"];
+var onects=[],tss=[];
+var cs=["#f44336","#E91E63","#9C27B0","#673AB7","#2196F3","#00BCD4","#009688","#4CAF50","#8BC34A","#FFC107","#FF9800","#795548"];
+var lv=0,lvline=[25,50,100,200],lvc=["#E91E63","#FF9800","#4CAF50","#2196F3","#673AB7"],lvn=["0","25+","50+","100+","200+"];
+var lvwds=[[]],lvtis=[[]];
+lvwds[1]=["やまだ","えびす","たまつら","ひばら","あべしせき","あまかし","かようちょう"];
+lvtis[1]=["山田といれっとおんりー","戎組合","玉列神社","桧原神社","安倍史跡公園","甘樫丘","萱生町集荷場"];
+lvwds[2]=["しらかわ","やさか","ふるいち","りょくち","へいじょうきゅう","よとぎ","かぐやま","かわら","かもつば"];
+lvtis[2]=["白河溜池","浅古八坂神社","古市公園","緑地公園","平城宮跡","夜都伎神社","香久山公園","川原寺跡","鴨都波神社"];
+lvwds[3]=["じょめい","ふたいじ","さくらい","だいこうじ","くにみ","がのごう","いこい"];
+lvtis[3]=["舒明天皇陵","不退寺","桜井ワープ・桜井図書館","大向寺橋","国見神社","雅の郷","憩の家"];
+lvwds[4]=["ろすと","とくべつたい","まっぷ","いっぱんたい","だんねん","けんこうそうだん","れすと"];
+lvtis[4]=["ロスト","特別隊","マップ","一般隊","断念","健康相談","レスト"];
+var bw=80,bh=80,bt=4,bl=4;
+var nsc=0;
+var b=[],c=[];
+var nw=[-1,-1],ns=[Infinity,Infinity],nc=[0,Math.floor(cs.length/2)],na=-1,nwt="";
+var nlv=0;
+
+//LocalStorage
+if(!localStorage){
+	alert("お使いのブラウザではLocalStorage機能がサポートされていないため、機能が一部停止します。");
+	var localStorage={};
+}
+localStorage.wlk_storage_format_ver=1;
+localStorage.wlk_last_access=new Date().getTime();
+if(!localStorage.wlk_first_access){
+	localStorage.wlk_first_access=new Date().getTime();
+}
+if(!localStorage.wlk_lv){
+	localStorage.wlk_lv=0;
+}
+lv=parseInt(localStorage.wlk_lv);
+
+/*for(var l=0;l<lv+1;l++){
+	ects=ects.concat(lvwds[l]);
+	ectsch=ectsch.concat(lvtis[l]);
+}*/
+
+//非タッチデバイス対応
+var TOUCH_EVENT='touchstart' in document ? 'touchstart':'click';
+
+function elm(id){
+	return document.getElementById(id);
+}
+
+function init(){
+	//LocalStorage
+	if(!localStorage.wlk_play_count){
+		localStorage.wlk_play_count=0;
+	}
+	if(!localStorage.wlk_max_score){
+		localStorage.wlk_max_score=0;
+	}
+	
+	elm("lvd").style.backgroundColor=lvc[lv];
+	elm("lvd").addEventListener("mousedown",function(e){
+		elm("cover_filling").style.backgroundColor=lvc[lv];
+		elm("cover").style.color="#FFF";
+		elm("cover_kana").innerHTML=localStorage.wlk_max_score;
+		elm("cover_title").innerHTML="あなたの最高点";
+		elm("cover_score").innerHTML="";
+		elm("cover").style.display="block";
+		setTimeout(function(){
+			elm("cover").style.opacity=1;
+		},1);
+		elm("cover").addEventListener("mousedown",function(){
+			elm("cover").style.opacity=0;
+			setTimeout(function(){
+				elm("cover").style.display="none";
+			},500);
+			elm("cover").removeEventListener("mousedown",arguments.callee);
+		});
+		e.preventDefault();
+	});
+	elm("lvd").addEventListener("mouseup",function(){
+		
+	});
+	
+	//nw=Math.floor(Math.random()*ects.length);
+	
+	nlv=0;
+	ects=ectsDefault,ectsch=ectschDefault;
+	
+	//フィールド配列初期化
+	for(var h=0;h<bl;h++){
+		b[h]=[];
+		for(var i=0;i<bt*2;i++){
+			b[h][i]=null;
+		}
+	}
+	nw=[-1,-1],ns=[Infinity,Infinity],nc=[0,Math.floor(cs.length/2)],na=-1,nwt="",onects=[],tss=[],nsc=0;
+	fillBlank();
+	ctrlGravity();
+}
+function fillBlank(){
+	var cue=[];
+	for(var h=0;h<bl;h++){
+		for(var i=bt;i<bt*2;i++){
+			if(!b[h][i]){
+				cue.push({h:h,i:i});
 			}
-		</script>
-		<script src="util.js"></script>
-	</body>
+		}
+	}
+	for(var j=0;j<cue.length;j++){
+		var j1=Math.floor(Math.random()*cue.length),j2=Math.floor(Math.random()*cue.length);
+		var jx=cue[j1];
+		cue[j1]=cue[j2];
+		cue[j2]=jx;
+	}
+	
+	for(var k=0;k<cue.length;k++){
+		var nsw=Math.floor(Math.random()*1);//難易度切り替えココ
+		if(nw[nsw]<0||ns[nsw]>=ects[nw[nsw]].length){
+			do{
+				nw[nsw]=Math.floor(Math.random()*ects.length);
+			}while(onects.indexOf(nw[nsw])>=0)
+			ns[nsw]=0;
+			nc[nsw]++;
+			onects.push(nw[nsw])
+		}
+		/*
+				if(ns>=ects[nw].length){
+					while(onects.indexOf(nw)>=0){
+						nw=Math.floor(Math.random()*ects.length);
+					}
+					ns=0;
+					nc++;
+				}
+				*/
+		if(nc[nsw]>=cs.length){
+			nc[nsw]=0;
+		}
+		var el=document.createElement("div");
+		var tx=document.createElement("div");
+		var cc=document.createElement("div");
+		el.className="block";
+		try{
+			tx.appendChild(document.createTextNode(ects[nw[nsw]].charAt(ns[nsw])));
+		}catch(e){
+			alert(nw+"|"+nsw+"|"+ects+"|"+ects[nw[nsw]])
+		}
+		cc.style.backgroundColor=cs[nc[nsw]];
+		el.appendChild(cc);
+				el.appendChild(tx);
+				ns[nsw]++;
+				el.style.color=cs[nc[nsw]];
+				el.style.left=100/bl*cue[k].h+"%";
+				el.style.bottom=(100/bt*cue[k].i)+"%";
+				
+				el.addEventListener(TOUCH_EVENT,(function(el,nm,h,i,c){
+					return function(){
+						touchBlock(el,nm,h,i,c);
+					};
+				})(el,nw[nsw],cue[k].h,cue[k].i,cs[nc[nsw]]));
+				
+				el.h=cue[k].h,el.i=cue[k].i;
+				b[cue[k].h][cue[k].i]=el;
+				elm("container").appendChild(el);
+	}
+}
+function ctrlGravity(){
+	for(var s=0;s<bt*2;s++){
+		setTimeout((function(u){
+			return function(){
+				chkerForStage(u);
+			};
+		})(s),100*s);
+	}
+	function chkerForStage(i){
+		for(var h=0;h<bl;h++){
+			if(b[h][i]){
+				for(var j=0;j<i;j++){
+					if(!b[h][j]){
+						b[h][j]=b[h][i];
+						b[h][j].h=h,b[h][j].i=j;
+						b[h][i]=null;
+						b[h][j].style.bottom=100/bt*j+"%";
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+function touchBlock(el,nm,x,y,c){
+	if(na!=nm&&na>=0){//na>=0がないと最初のタッチがアウトになる
+		breakCells();
+		return false;//厳格判定モードなう
+		for(var h=0;h<bl;h++){
+			for(var i=0;i<bt;i++){
+				if(!b[h][i])continue;
+				b[h][i].childNodes[0].style.transform="scale(0)";
+				b[h][i].childNodes[0].style.webkitTransform="scale(0)";
+				
+				b[h][i].style.color= b[h][i].childNodes[0].style.backgroundColor;
+			}
+		}
+		na=nm;
+		nwt="",tss=[];
+	}
+	nwt+=el.childNodes[1].innerHTML;
+	//el.h=x,el.i=y;
+	tss.push(el);
+	if(nwt==ects[nm]){
+		for(var j=0;j<tss.length;j++){
+			tss[j].parentNode.removeChild(tss[j]);
+			b[tss[j].h][tss[j].i]=null;
+		}
+		onects.splice(onects.indexOf(ects.indexOf(nwt)),1);
+		fillBlank();
+		ctrlGravity();
+		na=-1,nwt="",tss=[];
+		
+		nsc+=ects[nm].length;
+		elm("cover_filling").style.backgroundColor=c;
+		elm("cover").style.color="#FFF";
+		elm("cover_kana").innerHTML=ects[nm];
+		elm("cover_title").innerHTML=ectsch[nm];
+		elm("cover_score").innerHTML=nsc;
+		elm("cover").style.display="block";
+		setTimeout(function(){
+			elm("cover").style.opacity=1;
+		},1);
+		setTimeout(function(){
+			elm("cover").style.opacity=0;
+		},500);
+		setTimeout(function(){
+			elm("cover").style.display="none";
+		},800);
+		
+		
+		if(localStorage.wlk_max_score<nsc){
+		    localStorage.wlk_max_score=nsc;
+		}
+		
+		//LvUP判定
+		if(nsc>=lvline[nlv]){
+		    nlv++;
+		    if(lvline[nlv]){
+    			ects=ects.concat(lvwds[nlv]);
+    			ectsch=ectsch.concat(lvtis[nlv]);
+			    elm("lvd").style.backgroundColor=lvc[nlv];
+		    }
+		}
+		
+		/*
+		var s=nsc,scs=[],p=1
+		while(scs/Math.pow(10,p)<0)
+			var y=s%Math.pow(10,p);
+			for(var l=0;l<y/Math.pow(10,p-1);l++){
+				scs.push(cs[p-1]);
+			}
+			s-=y;
+			p++;
+		}
+		for(var o=0;o<scs.length;o++){
+			if(o>=elm("foot").childNode)
+		*/
+	}else if(nwt!=ects[nm].substring(0,nwt.length)){
+		//ゲーム終了
+		//プレイ回数ログ
+		localStorage.wlk_play_count++;
+		/*
+		if(localStorage.wlk_max_score<nsc){
+			localStorage.wlk_max_score=nsc;
+			ga("send","event","tsum_tsum","max_reflesh","",nsc)
+		}*/
+		//ga("send","event","tsum_tsum","start","",nsc);
+		
+		elm("cover_filling").style.backgroundColor="transparent";
+		elm("cover").style.color="#888";
+		elm("cover_kana").innerHTML="";
+		elm("cover_title").innerHTML="総得点";
+		elm("cover_score").innerHTML=nsc;
+		elm("cover").style.display="block";
+		setTimeout(function(){
+			elm("cover").style.opacity=1;
+		},1);
+		setTimeout(function(){
+			elm("cover").style.opacity=0;
+		},1800);
+		setTimeout(function(){
+			elm("cover").style.display="none";
+		},2200);
+		/*if(lvline[lv]&&lvline[lv]<=nsc){ 	
+			lv++;
+			localStorage.wlk_lv=lv;
+			elm("cover_filling").style.backgroundColor=lvc[lv];
+			elm("cover").style.color="#FFF";
+			elm("cover_kana").innerHTML=lvn[lv];
+			elm("cover_title").innerHTML="ラインクリア";
+			elm("lvd").style.backgroundColor=lvc[lv];
+			ects=ects.concat(lvwds[lv]);
+			ectsch=ectsch.concat(lvtis[lv]);
+			ga("send","event","tsum_tsum","levup","lev"+lv);
+		}*/
+		breakCells();
+		return false;
+	}
+	el.childNodes[0].style.transform="scale(0.8)";
+	el.childNodes[0].style.webkitTransform="scale(0.8)";
+	//alert( el.childNodes[0].style.background);
+	el.style.color="#FFF";
+}
+
+function breakCells(){
+	for(var h=0;h<bl;h++){
+		for(var i=0;i<bt;i++){
+			if(!b[h][i])continue;
+			b[h][i].style.transform="rotate("+Math.floor(Math.random()*360-180)+"deg)";
+			b[h][i].style.webkitTransform="rotate("+Math.floor(Math.random()*360-180)+"deg)";
+			b[h][i].style.color="#DDD";
+			b[h][i].style.opacity=0;
+			//b[h][i].style.bottom=-100/bt+'%';
+			setTimeout((function(h,i){
+				return function(){
+					b[h][i].parentNode.removeChild(b[h][i]);
+					b[h][i]=null;
+				};
+			})(h,i),1000);
+		}
+	}
+
+	setTimeout(init,2000);
+}
+window.addEventListener("load",init);
+        </script>
+        <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-59343512-1', 'auto');
+  ga('send', 'pageview');
+
+				</script>
+    </head>
+    <body>
+    	119
+        <div id="foot">
+        	<!--<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://goo.gl/4qPgxQ" data-text="地名を辿ってポイントアップ！百粁つむつむをプレイしよう！" data-lang="ja" data-count="none" data-hashtags="百粁徒歩" data-dnt="true">ツイート</a>-->
+        	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        	 <span class="flushMsg" style="display:none;">自己新記録を共有</span>
+        	 <div id="lvd"></div>
+        </div>
+        <div id="wrapper">
+            <div id="container">
+            </div>
+        </div>
+        <div id="cover">
+			<div id="cover_filling"></div>
+    		<div id="cover_kana">ならこうえん</div>
+    		<div id="cover_title">奈良公園</div>
+    		<div id="cover_score">15</div>
+    	</div>
+    </body>
 </html>
