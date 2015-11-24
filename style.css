@@ -1,0 +1,23 @@
+@font-face{
+	font-family:'はんなり明朝';
+	src:url("Hannari.otf");
+}
+
+body{
+	color:#000;
+	background-color:#EEE;
+}
+
+/* 外装コンテナ */
+#container{
+	position:absolute;
+	top:0%;
+	left:0%;
+	bottom:0%;
+	right:0%;
+	width:100vmin;
+	height:100vmin;
+	margin:auto;
+}
+
+/*  */
