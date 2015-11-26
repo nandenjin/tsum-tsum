@@ -1,40 +1,42 @@
 @font-face{
-	font-family:'はんなり明朝';
-	src:url("Hannari.otf");
+	font-family: 'はんなり明朝';
+	src: url("Hannari.otf");
 }
 
 body{
-	color:#000;
-	background-color:#EEE;
+	color: #000;
+	background-color: #EEE;
 }
 
 /* 外装コンテナ */
 #container{
-	position:absolute;
-	top:0%;
-	left:0%;
-	bottom:0%;
-	right:0%;
-	width:100vmin;
-	height:100vmin;
-	margin:auto;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	bottom: 0%;
+	right: 0%;
+	width: 100vmin;
+	height: 100vmin;
+	margin: auto;
 }
 
 /* ピース */
 .piece{
-  display:inline-block;
-  position:absolute;
-  width:15%;
-  height:15%;
+  display: table-cell;
+  position: absolute;
+  width: 12%;
+  height: 12%;
   
-  background-color:#FFF;
-  box-shadow:1px 1px 2px 1px rgba(0,0,0,0.2);
-  border-radius:50%;
+  background-color: #FFF;
+  box-shadow: 1px 1px 2px 1px rgba(0,0,0,0.2);
+  border-radius: 50%;
+  text-align: center;
+  vertical-align: middle;
 }
 
 #centerPiece{
-  top:43.5%;
-  left:43.5%;
-  background:#FFF url('./src/point_black.png') center no-repeat;
-  background-size:75%;
+  top: 44%;
+  left: 44%;
+  background: #FFF url('./src/point_black.png') center no-repeat;
+  background-size: 80%;
 }
