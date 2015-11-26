@@ -1,6 +1,6 @@
 @font-face{
 	font-family: 'はんなり明朝';
-	src: url("Hannari.otf");
+	src: url("src/Hannari.otf");
 }
 
 body{
@@ -22,21 +22,31 @@ body{
 
 /* ピース */
 .piece{
-  display: table-cell;
-  position: absolute;
-  width: 12%;
-  height: 12%;
+ display: inline-block;
+ position: absolute;
+ width: 12%;
+ height: 12%;
   
-  background-color: #FFF;
-  box-shadow: 1px 1px 2px 1px rgba(0,0,0,0.2);
-  border-radius: 50%;
-  text-align: center;
-  vertical-align: middle;
+ background-color: #FFF;
+ box-shadow: 1px 1px 2px 1px rgba(0,0,0,0.2);
+	border-radius: 50%;
+ text-align: center;
+}
+
+.pieceLabel{
+	position: absolute;
+	top: 50%;
+	left: 0%;
+	width: 100%;
+	margin-top: -0.7em;
+	
+	color: red;
+	font: normal 30px 'はんなり明朝';
 }
 
 #centerPiece{
-  top: 44%;
-  left: 44%;
-  background: #FFF url('./src/point_black.png') center no-repeat;
-  background-size: 80%;
+ top: 44%;
+ left: 44%;
+ background: #FFF url('./src/point_black.png') center no-repeat;
+ background-size: 80%;
 }

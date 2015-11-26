@@ -9,7 +9,10 @@ for( var i = 0; i < 18; i++ ){
 		d.className = "piece";
 		d.style.top = ( 0.5 - p.y - PIECE_SIZE/2 ) * 100 + "%";
 		d.style.left = ( 0.5 - p.x - PIECE_SIZE/2 ) * 100 + "%";
-		d.innerHTML = i;
+		var l = document.createElement("span");
+		l.className = "pieceLabel";
+		l.innerHTML = i;
+		d.appendChild(l);
 		containerDOM.appendChild(d);
 	})();
 }
