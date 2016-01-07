@@ -24,13 +24,21 @@ body{
 .piece{
  display: inline-block;
  position: absolute;
- width: 12%;
- height: 12%;
+ top: 43%;
+ left: 43%;
+ width: 14%;
+ height: 14%;
   
  background-color: #FFF;
  box-shadow: 1px 1px 2px 1px rgba(0,0,0,0.2);
 	border-radius: 50%;
  text-align: center;
+ 
+ transition: top 0.2s ease-out 0s,
+		left 0.2s ease-out 0s,
+		width 0.2s ease-out 0s,
+		height 0.2s ease-out 0s,
+		background-color 0.2s ease 0s;
 }
 
 .pieceLabel{
@@ -40,13 +48,14 @@ body{
 	width: 100%;
 	margin-top: -0.7em;
 	
-	color: red;
-	font: normal 30px 'はんなり明朝';
+	font: normal 6vmin 'はんなり明朝';
 }
 
 #centerPiece{
- top: 44%;
- left: 44%;
+ top: 43%;
+ left: 43%;
+ z-index: 2;
+ 
  background: #FFF url('./src/point_black.png') center no-repeat;
  background-size: 80%;
 }
